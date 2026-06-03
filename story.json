@@ -1,0 +1,76 @@
+[
+    {
+        "id": 0,
+        "title": "大海賊時代的開啟",
+        "audio": "story/roger_opening.mp3",
+        "desc": "哥爾·D·羅傑：『想要我的財寶嗎？想要的話可以全部給你...』",
+        "trigger_battle": false
+    },
+    {
+        "id": 1,
+        "title": "我是魯夫，我要成為海賊王（1）",
+        "audio": "story/01_1.mp3",
+        "desc": "魯夫出海，遇到了一個大漩渦，躲進酒桶，被海賊船發現，被撈上岸，最終破桶而出",
+        "trigger_battle": false
+    },
+    {
+        "id": 2,
+        "title": "我是魯夫，我要成為海賊王（2）",
+        "audio": "story/01_2.mp3",
+        "desc": "魯夫告訴克比他要成為海賊王的夢想，隨後，手拿鐵棒的亞爾麗塔破門而入，魯夫直接叫他粗魯老太婆， 亞爾麗塔暴怒",
+        "trigger_battle": false
+    },
+    {
+        "id": 3,
+        "title": "我是魯夫，我要成為海賊王（3）",
+        "audio": "story/01_3.mp3",
+        "desc": "亞爾麗塔的手下舉刀向克比砍去！魯夫必須在聽到刀聲的瞬間格擋！",
+        "trigger_battle": false
+    },
+    {
+        "id": 4,
+        "title": "我是魯夫，我要成為海賊王（4）",
+        "audio": "story/01_4.mp3",
+        "desc": "魯夫漂亮地擋下了攻擊，克比得救了！",
+        "trigger_battle": false
+    },
+    {
+        "id": 5,
+        "title": "我是魯夫，我要成為海賊王（5）",
+        "audio": "story/01_5.mp3",
+        "desc": "魯夫跟亞爾麗塔展開決戰",
+        "trigger_battle": true,
+    "target_enemy": "亞爾麗塔",
+    "target_hp": 300
+    },
+    {
+        "id": 6,
+        "title": "我是魯夫，我要成為海賊王（6）",
+        "audio": "story/01_6.mp3",
+        "desc": "魯夫成功打非亞爾莉塔後，準備前往下一個目的地",
+        "trigger_battle": false
+    },
+    {
+        "id": 7,
+        "title": "大劍客登場 海賊獵人索隆（1）",
+        "audio": "story/02_1.mp3",
+        "desc": "魯夫 等人來到了謝爾茲鎮，在那裏他們遇到了被綁起來的所龍",
+        "trigger_battle": false
+    },
+    {
+        "id": 8,
+        "title": "大劍客登場 海賊獵人索隆（2）",
+        "audio": "story/02_2.mp3",
+        "desc": "魯夫自做主張 邀請所龍加入它成為他的夥伴，條件是幫所龍拿回他的刀，魯夫跳進海軍基地，發現一群人正在搬 向，他衝上去想問路，節果不小心把雕像撞壞了。",
+        "trigger_battle": false
+    },
+    {
+        "id": 9,
+        "title": "大劍客登場 海賊獵人索隆（3）",
+        "audio": "story/02_3.mp3",
+        "desc": "魯夫不知道刀放在哪裡，開始找刀 ",
+        "trigger_battle": false
+    }
+
+
+]

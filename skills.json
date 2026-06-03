@@ -1,0 +1,30 @@
+{
+    "魯夫": [
+        {"skill": "橡膠槍", "audio": "skills/luffy_pistol.mp3", "dmg": 50},
+        {"skill": "橡膠火箭炮", "audio": "skills/luffy_bazooka.mp3", "dmg": 90, "knockback": true},        {"skill": "橡膠鐘、子彈、機關槍", "audio": "skills/luffy_combo.mp3", "dmg_list": [30, 50, 120]}
+    ],
+    "索隆": [
+        {"skill": "鬼斬", "audio": "skills/zoro_onigiri.mp3", "dmg": 70},
+        {"skill": "三千世界", "audio": "skills/zoro_3000.mp3", "dmg": 200}
+    ],
+    "西格": [
+        {"skill": "潑辣丟酒瓶", "audio": "skills/higuma_bottle.mp3", "dmg": 20},
+        {"skill": "山賊快刀砍", "audio": "skills/higuma_sword.mp3", "dmg": 40},
+        {"skill": "煙霧彈逃跑", "audio": "skills/higuma_smoke.mp3", "dmg": 10}
+    ],
+    "亞爾麗塔": [
+        {"skill": "鐵棒", "audio": "skills/alvida_ironclub.mp3", "dmg": 45}
+    ],
+"克洛克達爾": [
+        {
+          "skill": "沙塵暴",
+          "audio": "skills/crocodile_sables.mp3",
+          "dmg": 70,
+          "effects": [
+            {"type": "sandstorm", "duration": 3, "damage_per_turn": 10}
+          ]
+        },
+        {"skill": "沙漠寶刀", "audio": "skills/crocodile_DesertSpada.mp3", "dmg": 100}
+
+    ]
+}

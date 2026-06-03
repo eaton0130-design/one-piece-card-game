@@ -1,0 +1,9 @@
+{
+    "SOUND_FOLDER": "sounds",
+    "GACHA_COST": 100,
+    "FREE_GACHA_COOLDOWN": 3600,
+    "NPC_ENEMY_BLACKLIST": [
+        "西格",
+        "亞爾麗塔"
+    ]
+}
