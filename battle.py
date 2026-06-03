@@ -103,6 +103,12 @@ def battle(specific_enemy=None, specific_hp=None):
                 e_hp -= p_dmg
                 print(f"💥 造成 {p_dmg} 傷害！")
 
+                # 吸血效果
+                if p_card.get("life_steal"):
+                    heal_amount = int(p_dmg * p_card["life_steal"])
+                    p_hp += heal_amount
+                    print(f"💚 吸血效果！{p_char} 回復了 {heal_amount} HP！")
+
                 # 附加效果
                 if "effects" in p_card:
                     for effect in p_card["effects"]:

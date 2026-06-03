@@ -24,7 +24,12 @@
             {"type": "sandstorm", "duration": 3, "damage_per_turn": 10}
           ]
         },
-        {"skill": "沙漠寶刀", "audio": "skills/crocodile_DesertSpada.mp3", "dmg": 100}
+        {
+          "skill": "沙漠寶刀",
+          "audio": "skills/crocodile_DesertSpada.mp3",
+          "dmg": 100,
+          "life_steal": 0.5
+        }
 
     ]
 }
