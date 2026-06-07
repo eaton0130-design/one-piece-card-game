@@ -131,6 +131,13 @@ def play_story_mode():
         print(f"\n🎬 {scene['title']}")
         print(f"💬 {scene['desc']}")
         play_voice(scene['audio'])
+        # 觀看劇情也可獲得少量經驗，分配給目前隊伍所有成員
+        try:
+            from upgrade import add_xp_to_char
+            for name in game_state.player_data.get('my_chars', []):
+                add_xp_to_char(name, 5)
+        except Exception:
+            pass
         
         if scene.get("trigger_battle") == True:
             enemy_name = scene.get("target_enemy", "隨機對手")

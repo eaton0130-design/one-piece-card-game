@@ -29,6 +29,14 @@
           "audio": "skills/crocodile_DesertSpada.mp3",
           "dmg": 100,
           "life_steal": 0.5
+        },
+        {
+          "skill": "沙漠向日葵",
+          "audio": "skills/crocodile_sunflower.mp3",
+          "dmg": 50,
+          "effects": [
+            {"type": "quicksand", "display": "流沙束縛", "duration": 3, "damage_per_turn": 15, "disable_attack": true}
+          ]
         }
 
     ]

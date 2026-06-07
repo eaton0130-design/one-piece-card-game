@@ -70,7 +70,15 @@
         "audio": "story/02_3.mp3",
         "desc": "魯夫不知道刀放在哪裡，開始找刀 ",
         "trigger_battle": false
+    },
+    {
+        "id": 10,
+        "title": "大劍客登場 海賊獵人索隆（4）",
+        "audio": "story/02_4.mp3",
+        "desc": "魯夫、所龍與海軍展開大戰",
+        "trigger_battle": true,
+        "target_enemy": "海軍",
+        "target_hp": 600
     }
-
 
 ]

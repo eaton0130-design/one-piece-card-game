@@ -10,6 +10,7 @@ from data_manager import load_json, save_player_data
 from story import play_story_mode
 from battle import battle
 from gacha import gacha
+from upgrade import ensure_characters_initialized, manage_characters_cli
 
 def load_all_data():
     """載入所有 JSON 設定與存檔，更新 game_state 中的全域變數"""
@@ -20,7 +21,9 @@ def load_all_data():
     game_state.player_data.update(load_json("player_data.json", {
         "money": 200,
         "my_chars": ["魯夫"],
-        "last_free_gacha": 0
+        "last_free_gacha": 0,
+        # characters 結構會在啟動時補齊（等級、經驗、技能點、技能等級）
+        "characters": {}
     }))
     
     # 載入技能與劇情資料
@@ -37,6 +40,8 @@ def load_all_data():
     if "story_index" not in game_state.player_data:
         game_state.player_data["story_index"] = 0
         save_player_data()
+    # 確保 characters 結構存在並為 my_chars 補上預設值
+    ensure_characters_initialized()
 
 def main_menu():
     while True:
@@ -47,6 +52,7 @@ def main_menu():
         print("2. 進入自由戰鬥 (贏取貝里)")
         print("3. 角色抽卡 (每小時免費一次)")
         print("4. 結束冒險")
+        print("5. 角色管理與升級")
         choice = input("請選擇: ")
         
         if choice == '1':
@@ -55,6 +61,8 @@ def main_menu():
             battle()
         elif choice == '3':
             gacha()
+        elif choice == '5':
+            manage_characters_cli()
         elif choice == '4':
             print("期待下次與你航行！")
             break
