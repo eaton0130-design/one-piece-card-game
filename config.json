@@ -4,6 +4,7 @@
     "FREE_GACHA_COOLDOWN": 3600,
     "NPC_ENEMY_BLACKLIST": [
         "西格",
-        "亞爾麗塔"
+        "亞爾麗塔",
+        "海軍"
     ]
 }

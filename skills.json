@@ -15,7 +15,7 @@
     "亞爾麗塔": [
         {"skill": "鐵棒", "audio": "skills/alvida_ironclub.mp3", "dmg": 45}
     ],
-"克洛克達爾": [
+    "克洛克達爾": [
         {
           "skill": "沙塵暴",
           "audio": "skills/crocodile_sables.mp3",
@@ -39,5 +39,8 @@
           ]
         }
 
+    ],
+    "海軍": [
+        {"skill": "槍擊", "audio": "skills/navy_shot.mp3", "dmg": 60}
     ]
 }
