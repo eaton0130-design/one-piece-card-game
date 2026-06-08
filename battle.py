@@ -181,8 +181,13 @@ def battle(specific_enemy=None, specific_hp=None):
                 level_multiplier = 1 + 0.05 * (p_level - 1)
                 skill_multiplier = 1 + 0.10 * skill_lv
                 p_dmg = int(base_dmg * level_multiplier * skill_multiplier)
-                e_hp -= p_dmg
-                print(f"💥 造成 {p_dmg} 傷害！")
+                # 檢查敵方是否處於不可被命中（invulnerable）狀態，例如克洛克達爾的砂畫
+                if any(eff.get("invulnerable") for eff in e_effects):
+                    display = next((eff.get("display", eff["type"]) for eff in e_effects if eff.get("invulnerable")), "特殊狀態")
+                    print(f"💨 {e_name} 處於 {display}，攻擊無效！")
+                else:
+                    e_hp -= p_dmg
+                    print(f"💥 造成 {p_dmg} 傷害！")
 
                 # 增加 KP（若為魯夫，且不是使用需要 KP 的特殊技）
                 if p_char == '魯夫' and p_card.get('skill') != '橡膠鐘、子彈、機關槍':
@@ -236,12 +241,19 @@ def battle(specific_enemy=None, specific_hp=None):
                 print(f"\n🌀 {e_name} 反擊！")
                 time.sleep(1)
 
-                enemy_skills = game_state.SKILL_DATA.get(e_name, [{"skill": "普通攻擊", "dmg": 10}])
-                e_card = random.choice(enemy_skills)
+                enemy_skills = game_state.SKILL_DATA.get(e_name, [])
+                # 電腦也可以使用普通攻擊，避免某些敵人成為無敵魔王
+                enemy_choices = enemy_skills.copy()
+                enemy_choices.append({"skill": "普通攻擊", "dmg": 10})
+                e_card = random.choice(enemy_choices)
                 print(f"💢 使用了 {e_card['skill']}！")
                 if 'audio' in e_card:
                     play_voice(e_card['audio'])
                 e_dmg = sum(e_card['dmg_list']) if "dmg_list" in e_card else e_card['dmg']
+                # 若敵人是克洛克達爾，使用非普通攻擊技能後進入「砂畫」狀態，持續 3 回合且不可被攻擊
+                if e_name == '克洛克達爾' and e_card.get('skill') and e_card.get('skill') != '普通攻擊':
+                    sand_effect = {"type": "sand_paint", "display": "砂畫狀態", "duration": 3, "invulnerable": True}
+                    add_unique_effect(e_effects, sand_effect, e_name)
                 # 防禦效果：只在普通回合有效（非連段），且用於該次反擊
                 if defending:   # defending 是最後一次行動的防禦狀態
                     e_dmg = e_dmg // 2
