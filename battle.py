@@ -4,7 +4,7 @@ import time
 import game_state
 from audio import play_voice
 from data_manager import save_player_data
-from upgrade import add_xp_to_char, get_char_level, get_skill_level, get_mp, get_max_mp, add_mp, consume_mp, add_kp, get_kp, consume_kp
+from upgrade import add_xp, get_level, get_skill_level, get_mp, get_max_mp, add_mp, consume_mp, add_kp, get_kp, consume_kp
 
 def battle(specific_enemy=None, specific_hp=None):
     """戰鬥函式，回傳是否勝利（True=勝利）"""
@@ -250,9 +250,9 @@ def battle(specific_enemy=None, specific_hp=None):
                 if 'audio' in e_card:
                     play_voice(e_card['audio'])
                 e_dmg = sum(e_card['dmg_list']) if "dmg_list" in e_card else e_card['dmg']
-                # 若敵人是克洛克達爾，使用非普通攻擊技能後進入「砂畫」狀態，持續 3 回合且不可被攻擊
+                # 若敵人是克洛克達爾，使用非普通攻擊技能後進入「砂畫」狀態，持續 2 回合且不可被攻擊
                 if e_name == '克洛克達爾' and e_card.get('skill') and e_card.get('skill') != '普通攻擊':
-                    sand_effect = {"type": "sand_paint", "display": "砂畫狀態", "duration": 3, "invulnerable": True}
+                    sand_effect = {"type": "sand_paint", "display": "砂畫狀態", "duration": 2, "invulnerable": True}
                     add_unique_effect(e_effects, sand_effect, e_name)
                 # 防禦效果：只在普通回合有效（非連段），且用於該次反擊
                 if defending:   # defending 是最後一次行動的防禦狀態
@@ -279,7 +279,7 @@ def battle(specific_enemy=None, specific_hp=None):
         game_state.player_data["money"] += reward
         # 經驗獎勵：根據敵人初始 HP 與隨機性
         xp_reward = random.randint(20, 40)
-        add_xp_to_char(p_char, xp_reward)
+        add_xp(p_char, xp_reward)
         # 戰鬥結束後自動補滿 MP
         add_mp(p_char, get_max_mp(p_char))
         print(f"\n🏆 勝利！成功打飛了 {e_name}！獲得戰利品 {reward} 貝里，並獲得 {xp_reward} 經驗值！(MP 已補滿)")

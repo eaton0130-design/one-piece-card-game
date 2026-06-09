@@ -3,7 +3,7 @@ import random
 import time
 from audio import play_voice
 
-def timing_defense_game():
+def timing_game():
     """聽音格擋（第一集）"""
     attack_sound = "story/attack_1.mp3"
     print("\n⚔️ 【魯夫挺身保護克比！】")
@@ -41,7 +41,7 @@ def timing_defense_game():
             print("   你按得太慢了，克比被砍中了！")
         return False
 
-def rocket_statue_game():
+def rocket_game():
     """撞雕像小遊戲（第二集開頭）"""
     print("\n🚀 【橡膠火箭撞雕像】")
     print("魯夫將手臂向後伸長，準備發射橡膠火箭！")
@@ -85,7 +85,7 @@ def rocket_statue_game():
             print("   你按得太慢了，撞到旁邊的牆壁！")
         return False
 
-def sword_pick_game():
+def sword_game():
     """猜刀小遊戲（第二集後半）－ 溫和版，猜錯只重置當前刀"""
     print("\n🗡️ 【尋找索隆的刀】")
     print("魯夫面前有三個箱子，裡面只有一個藏有索隆的一把刀。")

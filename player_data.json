@@ -1,0 +1,19 @@
+{
+    "money": 200,
+    "my_chars": [
+        "魯夫"
+    ],
+    "last_free_gacha": 0,
+    "characters": {
+        "魯夫": {
+            "level": 1,
+            "xp": 0,
+            "skill_points": 0,
+            "skills": {},
+            "max_mp": 100,
+            "mp": 100,
+            "kp": 0
+        }
+    },
+    "story_index": 0
+}

@@ -4,9 +4,9 @@ import game_state
 from audio import play_voice
 from data_manager import save_player_data
 from battle import battle
-from minigames import timing_defense_game, rocket_statue_game, sword_pick_game
+from minigames import timing_game, rocket_game, sword_game
 
-def play_story_mode():
+def play_story():
     print("\n📖 --- 進入劇情模式 ---")
     
     start_idx = game_state.player_data.get("story_index", 0)
@@ -37,7 +37,7 @@ def play_story_mode():
             
             success = False
             while not success:
-                success = timing_defense_game()
+                success = timing_game()
                 if not success:
                     retry = input("\n🔄 重來一次？(y/n): ").lower()
                     if retry != 'y':
@@ -75,7 +75,7 @@ def play_story_mode():
             
             success = False
             while not success:
-                success = rocket_statue_game()
+                success = rocket_game()
                 if not success:
                     retry = input("\n🔄 重來一次？(y/n): ").lower()
                     if retry != 'y':
@@ -100,7 +100,7 @@ def play_story_mode():
             else:
                 print(f"⏩ 跳過「{scene['title']}」的劇情內容。")
             
-            sword_pick_game()
+            sword_game()
             
             idx += 1
             game_state.player_data["story_index"] = idx
@@ -133,9 +133,9 @@ def play_story_mode():
         play_voice(scene['audio'])
         # 觀看劇情也可獲得少量經驗，分配給目前隊伍所有成員
         try:
-            from upgrade import add_xp_to_char
+            from upgrade import add_xp
             for name in game_state.player_data.get('my_chars', []):
-                add_xp_to_char(name, 5)
+                add_xp(name, 5)
         except Exception:
             pass
         

@@ -7,12 +7,12 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import game_state
 from data_manager import load_json, save_player_data
-from story import play_story_mode
+from story import play_story
 from battle import battle
 from gacha import gacha
-from upgrade import ensure_characters_initialized, manage_characters_cli
+from upgrade import init_characters, manage_chars
 
-def load_all_data():
+def init_data():
     """載入所有 JSON 設定與存檔，更新 game_state 中的全域變數"""
     # 載入設定檔
     game_state.config = load_json("config.json", {})
@@ -41,7 +41,7 @@ def load_all_data():
         game_state.player_data["story_index"] = 0
         save_player_data()
     # 確保 characters 結構存在並為 my_chars 補上預設值
-    ensure_characters_initialized()
+    init_characters()
 
 def main_menu():
     while True:
@@ -56,19 +56,19 @@ def main_menu():
         choice = input("請選擇: ")
         
         if choice == '1':
-            play_story_mode()
+            play_story()
         elif choice == '2':
             battle()
         elif choice == '3':
             gacha()
         elif choice == '5':
-            manage_characters_cli()
+            manage_chars()
         elif choice == '4':
             print("期待下次與你航行！")
             break
 
 if __name__ == "__main__":
-    load_all_data()
+    init_data()
     try:
         main_menu()
     except KeyboardInterrupt:

@@ -1,7 +1,7 @@
 import game_state
 from data_manager import save_player_data
 
-def ensure_characters_initialized():
+def init_characters():
     """確保 player_data 中有 characters 結構，並為 my_chars 中的角色建立預設資料。"""
     pd = game_state.player_data
     if "characters" not in pd:
@@ -21,7 +21,7 @@ def ensure_characters_initialized():
             }
     save_player_data()
 
-def xp_to_level_req(level):
+def xp_req(level):
     # 分段成長曲線：
     # 等級 1-5：每級需求 100 * level（新手友好）
     # 等級 6-10：每級需求 150 * level（進階）
@@ -33,9 +33,9 @@ def xp_to_level_req(level):
     else:
         return 250 * level
 
-def add_xp_to_char(name, amount):
+def add_xp(name, amount):
     pd = game_state.player_data
-    ensure_characters_initialized()
+    init_characters()
     chars = pd["characters"]
     if name not in chars:
         return
@@ -43,8 +43,8 @@ def add_xp_to_char(name, amount):
     entry["xp"] += amount
     leveled = False
     # 迴圈處理可能的多重升級
-    while entry["xp"] >= xp_to_level_req(entry["level"]):
-        req = xp_to_level_req(entry["level"])
+    while entry["xp"] >= xp_req(entry["level"]):
+        req = xp_req(entry["level"])
         entry["xp"] -= req
         entry["level"] += 1
         entry["skill_points"] += 1
@@ -57,15 +57,15 @@ def add_xp_to_char(name, amount):
     save_player_data()
 
 def get_mp(name):
-    ensure_characters_initialized()
+    init_characters()
     return game_state.player_data["characters"].get(name, {}).get("mp", 0)
 
 def get_max_mp(name):
-    ensure_characters_initialized()
+    init_characters()
     return game_state.player_data["characters"].get(name, {}).get("max_mp", 100)
 
 def consume_mp(name, amount):
-    ensure_characters_initialized()
+    init_characters()
     entry = game_state.player_data["characters"].get(name)
     if not entry:
         return False
@@ -76,7 +76,7 @@ def consume_mp(name, amount):
     return True
 
 def add_mp(name, amount):
-    ensure_characters_initialized()
+    init_characters()
     entry = game_state.player_data["characters"].get(name)
     if not entry:
         return
@@ -84,11 +84,11 @@ def add_mp(name, amount):
     save_player_data()
 
 def get_kp(name):
-    ensure_characters_initialized()
+    init_characters()
     return game_state.player_data["characters"].get(name, {}).get("kp", 0)
 
 def add_kp(name, amount):
-    ensure_characters_initialized()
+    init_characters()
     entry = game_state.player_data["characters"].get(name)
     if not entry:
         return
@@ -96,7 +96,7 @@ def add_kp(name, amount):
     save_player_data()
 
 def consume_kp(name):
-    ensure_characters_initialized()
+    init_characters()
     entry = game_state.player_data["characters"].get(name)
     if not entry:
         return False
@@ -106,16 +106,16 @@ def consume_kp(name):
     save_player_data()
     return True
 
-def get_char_level(name):
-    ensure_characters_initialized()
+def get_level(name):
+    init_characters()
     return game_state.player_data["characters"].get(name, {}).get("level", 1)
 
 def get_skill_level(name, skill_name):
-    ensure_characters_initialized()
+    init_characters()
     return game_state.player_data["characters"].get(name, {}).get("skills", {}).get(skill_name, 0)
 
 def spend_skill_point(name, skill_name):
-    ensure_characters_initialized()
+    init_characters()
     chars = game_state.player_data["characters"]
     entry = chars.get(name)
     if not entry:
@@ -130,8 +130,8 @@ def spend_skill_point(name, skill_name):
     print(f"✅ 已為 {name} 的技能 '{skill_name}' 提升到等級 {entry['skills'][skill_name]}。")
     return True
 
-def manage_characters_cli():
-    ensure_characters_initialized()
+def manage_chars():
+    init_characters()
     pd = game_state.player_data
     while True:
         print("\n--- 角色管理與升級 ---")
@@ -150,7 +150,7 @@ def manage_characters_cli():
             continue
 
         entry = pd["characters"][name]
-        next_req = xp_to_level_req(entry['level'])
+        next_req = xp_req(entry['level'])
         remaining = max(0, next_req - entry['xp'])
         print(f"\n{name} - 等級 {entry['level']} / XP {entry['xp']} / 可用技能點 {entry['skill_points']} / 到下一級還需 {remaining} XP")
         # 列出該角色所有可升級技能（從 SKILL_DATA 來源）
