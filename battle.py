@@ -45,7 +45,7 @@ def battle(specific_enemy=None, specific_hp=None):
 
     # 戰鬥初始值
     # 初始 HP 可視等級調整（基準 500，每等 +20）
-    p_level = get_char_level(p_char)
+    p_level = get_level(p_char)
     p_hp = 500 + (p_level - 1) * 20
     p_max_mp = get_max_mp(p_char)
     p_mp = get_mp(p_char)
