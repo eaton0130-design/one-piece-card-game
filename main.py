@@ -11,6 +11,7 @@ from story import play_story
 from battle import battle
 from gacha import gacha
 from upgrade import init_characters, manage_chars
+from base import init_base, show_base_menu
 
 def init_data():
     """載入所有 JSON 設定與存檔，更新 game_state 中的全域變數"""
@@ -42,6 +43,8 @@ def init_data():
         save_player_data()
     # 確保 characters 結構存在並為 my_chars 補上預設值
     init_characters()
+    # 確保基地資料結構初始化
+    init_base()
 
 def main_menu():
     while True:
@@ -51,8 +54,9 @@ def main_menu():
         print("1. 觀看劇情模式")
         print("2. 進入自由戰鬥 (贏取貝里)")
         print("3. 角色抽卡 (每小時免費一次)")
-        print("4. 結束冒險")
+        print("4. 海賊基地 (建築、派遣、資源)")
         print("5. 角色管理與升級")
+        print("6. 結束冒險")
         choice = input("請選擇: ")
         
         if choice == '1':
@@ -61,9 +65,11 @@ def main_menu():
             battle()
         elif choice == '3':
             gacha()
+        elif choice == '4':
+            show_base_menu()
         elif choice == '5':
             manage_chars()
-        elif choice == '4':
+        elif choice == '6':
             print("期待下次與你航行！")
             break
 
