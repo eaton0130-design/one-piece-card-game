@@ -41,6 +41,9 @@
 
     ],
     "海軍": [
-        {"skill": "槍擊", "audio": "skills/navy_shot.mp3", "dmg": 60}
+      {"skill": "槍擊", "audio": "skills/navy_shot.mp3", "dmg": 60}
+    ],
+    "蒙卡": [
+      {"skill": "斧斬", "audio": "skills/monka_axe.mp3", "dmg": 120}
     ]
 }

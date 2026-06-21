@@ -79,6 +79,15 @@
         "trigger_battle": true,
         "target_enemy": "海軍",
         "target_hp": 600
+    },
+    {
+        "id": 11,
+        "title": "蒙卡與魯夫大對決 謎樣的美少女",
+        "audio": "story/03_1.mp3",
+        "desc": "魯夫一群人打倒了海軍，跟海軍上校蒙卡展開大對決",
+        "trigger_battle": true,
+        "target_enemy": "蒙卡",
+        "target_hp": 700
     }
 
 ]
