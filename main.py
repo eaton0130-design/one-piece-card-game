@@ -1,6 +1,12 @@
 # main.py
 import sys
 import os
+import time
+if os.environ.get("LAUNCHED_FROM_BAT") != "TRUE":
+    print(" ❌ 錯誤：請勿直接執行 main.py！")
+    print("請使用遊戲資料夾內的開始遊戲.bat來啟動遊戲")
+    time.sleep(3)
+    sys.exit()
 
 # 確保可以導入同目錄的其他模組
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))

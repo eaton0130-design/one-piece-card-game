@@ -32,6 +32,7 @@ echo.
 timeout /t 2 >nul
 
 :: 啟動你的遊戲
+set LAUNCHED_FROM_BAT=TRUE
 python main.py
 
 echo.
