@@ -6,21 +6,35 @@ from audio import play_voice
 from data_manager import save_player_data
 from upgrade import add_xp, get_level, get_skill_level, get_mp, get_max_mp, add_mp, consume_mp, add_kp, get_kp, consume_kp
 
-def battle(specific_enemy=None, specific_hp=None):
+
+def select_player_character(available_chars, specific_player=None):
+    if specific_player:
+        if specific_player in available_chars:
+            return specific_player
+        raise ValueError(f"指定我方角色 {specific_player} 不在你的隊伍中。")
+
+    print("\n--- 選擇你的出戰角色 ---")
+    for i, char in enumerate(available_chars):
+        print(f"{i}. {char}")
+    try:
+        char_idx = int(input("請輸入編號: "))
+        return available_chars[char_idx]
+    except (ValueError, IndexError):
+        raise ValueError("無效的選擇。")
+
+
+def battle(specific_enemy=None, specific_hp=None, specific_player=None, specific_player_hp=None):
     """戰鬥函式，回傳是否勝利（True=勝利）"""
-    if not game_state.player_data["my_chars"]:
+    available_chars = game_state.player_data.get("my_chars", [])
+    if not available_chars:
         print("你沒有可以上場的角色！")
         return False
 
     # 選擇出戰角色
-    print("\n--- 選擇你的出戰角色 ---")
-    for i, char in enumerate(game_state.player_data["my_chars"]):
-        print(f"{i}. {char}")
     try:
-        char_idx = int(input("請輸入編號: "))
-        p_char = game_state.player_data["my_chars"][char_idx]
-    except (ValueError, IndexError):
-        print("❌ 無效的選擇。")
+        p_char = select_player_character(available_chars, specific_player)
+    except ValueError as exc:
+        print(f"❌ {exc}")
         return False
 
     # 決定敵人
@@ -46,7 +60,10 @@ def battle(specific_enemy=None, specific_hp=None):
     # 戰鬥初始值
     # 初始 HP 可視等級調整（基準 500，每等 +20）
     p_level = get_level(p_char)
-    p_hp = 500 + (p_level - 1) * 20
+    if specific_player_hp is not None:
+        p_hp = specific_player_hp
+    else:
+        p_hp = 500 + (p_level - 1) * 20
     p_max_mp = get_max_mp(p_char)
     p_mp = get_mp(p_char)
     p_effects = []

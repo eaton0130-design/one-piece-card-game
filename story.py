@@ -6,6 +6,26 @@ from data_manager import save_player_data
 from battle import battle
 from minigames import timing_game, rocket_game, sword_game
 
+
+def trigger_story_battle(scene):
+    enemy_name = scene.get("target_enemy", "隨機對手")
+    enemy_hp = scene.get("target_hp", 500)
+    ally_name = scene.get("target_player", "魯夫")
+    ally_hp = scene.get("target_player_hp")
+    print(f"\n🔥 [警告] 劇情觸發戰鬥！我方【{ally_name}】迎擊【{enemy_name}】！")
+    time.sleep(1)
+    victory = battle(
+        specific_enemy=enemy_name,
+        specific_hp=enemy_hp,
+        specific_player=ally_name,
+        specific_player_hp=ally_hp,
+    )
+    if not victory:
+        print("戰鬥失敗，劇情無法推進。請重新挑戰。")
+        return False
+    return True
+
+
 def play_story():
     print("\n📖 --- 進入劇情模式 ---")
     
@@ -114,13 +134,7 @@ def play_story():
         if choice.lower() == 's':
             print(f"⏩ 跳過「{scene['title']}」的劇情內容。")
             if scene.get("trigger_battle") == True:
-                enemy_name = scene.get("target_enemy", "隨機對手")
-                enemy_hp = scene.get("target_hp", 500)
-                print(f"\n🔥 [警告] 劇情觸發戰鬥！正面迎擊【{enemy_name}】！")
-                time.sleep(1)
-                victory = battle(specific_enemy=enemy_name, specific_hp=enemy_hp)
-                if not victory:
-                    print("戰鬥失敗，劇情無法推進。請重新挑戰。")
+                if not trigger_story_battle(scene):
                     return
             idx += 1
             game_state.player_data["story_index"] = idx
@@ -140,13 +154,7 @@ def play_story():
             pass
         
         if scene.get("trigger_battle") == True:
-            enemy_name = scene.get("target_enemy", "隨機對手")
-            enemy_hp = scene.get("target_hp", 500)
-            print(f"\n🔥 [警告] 劇情觸發戰鬥！正面迎擊【{enemy_name}】！")
-            time.sleep(1)
-            victory = battle(specific_enemy=enemy_name, specific_hp=enemy_hp)
-            if not victory:
-                print("戰鬥失敗，劇情無法推進。請重新挑戰。")
+            if not trigger_story_battle(scene):
                 return
         else:
             input("\n[按 Enter 繼續下一段劇情...]")

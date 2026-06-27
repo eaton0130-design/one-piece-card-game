@@ -41,7 +41,8 @@
         "desc": "魯夫跟亞爾麗塔展開決戰",
         "trigger_battle": true,
     "target_enemy": "亞爾麗塔",
-    "target_hp": 300
+    "target_hp": 300,
+    "target_player": "魯夫"
     },
     {
         "id": 6,
@@ -78,7 +79,8 @@
         "desc": "魯夫、所龍與海軍展開大戰",
         "trigger_battle": true,
         "target_enemy": "海軍",
-        "target_hp": 600
+        "target_hp": 600,
+        "target_player": "魯夫"
     },
     {
         "id": 11,
@@ -87,7 +89,8 @@
         "desc": "魯夫一群人打倒了海軍，跟海軍上校蒙卡展開大對決",
         "trigger_battle": true,
         "target_enemy": "蒙卡",
-        "target_hp": 700
+        "target_hp": 700,
+        "target_player": "魯夫"
     }
 
 ]
