@@ -1,0 +1,20 @@
+{
+    "default_levels": {
+        "dock": 1,
+        "tavern": 1,
+        "workshop": 1,
+        "training": 1,
+        "intelligence": 1,
+        "market": 1,
+        "forge": 0
+    },
+    "building_costs": {
+        "dock": {"money": 150, "wood": 20},
+        "tavern": {"money": 120, "food": 25},
+        "workshop": {"money": 100, "metal": 20},
+        "training": {"money": 120, "food": 15, "wood": 10},
+        "intelligence": {"money": 130, "intel": 0},
+        "market": {"money": 150, "wood": 10, "metal": 10},
+        "forge": {"money": 180, "wood": 15, "metal": 15}
+    }
+}

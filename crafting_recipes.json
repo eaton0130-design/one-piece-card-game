@@ -1,0 +1,27 @@
+[
+    {
+        "name": "簡易治癒藥水",
+        "type": "item",
+        "materials": {"food": 10, "metal": 2}
+    },
+    {
+        "name": "補強護手",
+        "type": "equipment",
+        "materials": {"wood": 10, "metal": 10}
+    },
+    {
+        "name": "水桶",
+        "type": "item",
+        "materials": {"wood": 5, "metal": 5}
+    },
+    {
+        "name": "情報探測器",
+        "type": "item",
+        "materials": {"metal": 5, "intel": 15}
+    },
+    {
+        "name": "鋼鐵護腕",
+        "type": "equipment",
+        "materials": {"metal": 15, "fragments": 2}
+    }
+]

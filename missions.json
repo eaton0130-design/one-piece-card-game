@@ -1,0 +1,26 @@
+[
+    {
+        "name": "探索海域",
+        "duration": 30,
+        "reward": {"wood": 30, "food": 20},
+        "xp": 10
+    },
+    {
+        "name": "打撈沉船",
+        "duration": 45,
+        "reward": {"money": 80, "fragments": 2},
+        "xp": 15
+    },
+    {
+        "name": "情報蒐集",
+        "duration": 40,
+        "reward": {"intel": 20, "metal": 15},
+        "xp": 12
+    },
+    {
+        "name": "突襲海軍",
+        "duration": 60,
+        "reward": {"money": 120, "intel": 15},
+        "xp": 18
+    }
+]

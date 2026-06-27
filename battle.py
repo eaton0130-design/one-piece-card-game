@@ -78,6 +78,69 @@ def battle(specific_enemy=None, specific_hp=None):
         print(f"✨ {owner_name} 中了 {display} 效果！")
         return True
 
+    def get_inventory_items():
+        inventory = game_state.player_data.get("inventory", {"items": {}, "equipment": []})
+        return inventory.get("items", {})
+
+    def consume_item(item_name):
+        inventory = game_state.player_data.setdefault("inventory", {"items": {}, "equipment": []})
+        items = inventory.setdefault("items", {})
+        count = items.get(item_name, 0)
+        if count <= 0:
+            return False
+        if count == 1:
+            del items[item_name]
+        else:
+            items[item_name] = count - 1
+        save_player_data()
+        return True
+
+    def has_water_luffy():
+        return any(eff.get("type") == "water_luffy" for eff in p_effects)
+
+    def use_item_on_enemy(item_name):
+        nonlocal e_hp, p_hp
+        if item_name != "水桶":
+            print(f"❌ 這個道具還不能在戰鬥中使用：{item_name}")
+            return False
+
+        if e_name != "克洛克達爾":
+            print("❌ 水桶只能對克洛克達爾使用。")
+            return False
+
+        sand_types = {"sand_paint", "sandstorm", "quicksand"}
+        if p_char == "魯夫":
+            print("\n你可以選擇：1. 潑灑  2. 喝水")
+            choice = input("請選擇使用方式: ")
+            if choice == '2':
+                if any(eff.get("type") in sand_types for eff in e_effects):
+                    e_effects[:] = [eff for eff in e_effects if eff.get("type") not in sand_types]
+                    print("💧 你喝下水桶裡的水，克洛克達爾的砂化效果被沖散了！")
+                p_effects.append({"type": "water_luffy", "display": "水魯夫狀態", "duration": 3})
+                print("🌊 魯夫變身成水魯夫！對克洛克達爾傷害翻倍，並免疫克洛克達爾攻擊的附加效果傷害。")
+                return True
+            else:
+                if any(eff.get("type") in sand_types for eff in e_effects):
+                    e_effects[:] = [eff for eff in e_effects if eff.get("type") not in sand_types]
+                    print("💧 你潑灑水桶，克洛克達爾的砂化效果被沖散了！")
+                else:
+                    print("🪣 你潑灑水桶，但克洛克達爾目前沒有砂化效果。")
+                e_hp -= 200
+                print("💦 水桶命中！克洛克達爾受到 200 點傷害。")
+                return True
+        else:
+            if any(eff.get("type") in sand_types for eff in e_effects):
+                e_effects[:] = [eff for eff in e_effects if eff.get("type") not in sand_types]
+                print("💧 你潑灑水桶，克洛克達爾的砂化效果被沖散了！")
+            else:
+                print("🪣 你潑灑水桶，但克洛克達爾目前沒有砂化效果。")
+            e_hp -= 200
+            print("💦 水桶命中！克洛克達爾受到 200 點傷害。")
+            if p_char == "克洛克達爾":
+                p_hp -= 200
+                print("⚠️ 你方的克洛克達爾因使用水桶受到 200 點反噬傷害。")
+            return True
+
     def update_effects(effects):
         for eff in effects[:]:
             eff["duration"] -= 1
@@ -108,10 +171,36 @@ def battle(specific_enemy=None, specific_hp=None):
 
         while player_turn_active:
             # 玩家行動選單
-            action = input("👉 請選擇：1. 攻擊  2. 防禦 : ")
+            action = input("👉 請選擇：1. 攻擊  2. 防禦  3. 使用道具: ")
             defending = (action == "2")
+            using_item = (action == "3")
             if defending:
                 print(f"🛡️ {p_char} 採取防禦姿態，本回合受到的傷害減半！")
+
+            if using_item:
+                items = get_inventory_items()
+                if not items:
+                    print("❌ 你目前沒有任何可用道具。")
+                    player_turn_active = False
+                    continue
+                print("\n--- 可用道具 ---")
+                item_list = list(items.items())
+                for idx, (name, count) in enumerate(item_list):
+                    print(f"{idx}. {name} x{count}")
+                try:
+                    choice_idx = int(input("輸入要使用的道具編號: "))
+                    item_name = item_list[choice_idx][0]
+                except Exception:
+                    print("無效選擇，使用道具失敗。")
+                    player_turn_active = False
+                    continue
+                if use_item_on_enemy(item_name):
+                    if consume_item(item_name):
+                        print(f"✅ 成功使用 {item_name}。")
+                    else:
+                        print(f"⚠️ 道具 {item_name} 已失效，請確認庫存。" )
+                player_turn_active = False
+                continue
 
             # 玩家攻擊（若不防禦）
             if not defending:
@@ -181,6 +270,9 @@ def battle(specific_enemy=None, specific_hp=None):
                 level_multiplier = 1 + 0.05 * (p_level - 1)
                 skill_multiplier = 1 + 0.10 * skill_lv
                 p_dmg = int(base_dmg * level_multiplier * skill_multiplier)
+                if p_char == '魯夫' and has_water_luffy() and e_name == '克洛克達爾':
+                    p_dmg *= 2
+                    print("🌊 水魯夫之力！對克洛克達爾傷害提升至 2 倍！")
                 # 檢查敵方是否處於不可被命中（invulnerable）狀態，例如克洛克達爾的砂畫
                 if any(eff.get("invulnerable") for eff in e_effects):
                     display = next((eff.get("display", eff["type"]) for eff in e_effects if eff.get("invulnerable")), "特殊狀態")
@@ -251,7 +343,7 @@ def battle(specific_enemy=None, specific_hp=None):
                     play_voice(e_card['audio'])
                 e_dmg = sum(e_card['dmg_list']) if "dmg_list" in e_card else e_card['dmg']
                 # 若敵人是克洛克達爾，使用非普通攻擊技能後進入「砂畫」狀態，持續 2 回合且不可被攻擊
-                if e_name == '克洛克達爾' and e_card.get('skill') and e_card.get('skill') != '普通攻擊':
+                if e_name == '克洛克達爾' and e_card.get('skill') and e_card.get('skill') != '普通攻擊' and not has_water_luffy():
                     sand_effect = {"type": "sand_paint", "display": "砂畫狀態", "duration": 2, "invulnerable": True}
                     add_unique_effect(e_effects, sand_effect, e_name)
                 # 防禦效果：只在普通回合有效（非連段），且用於該次反擊
@@ -263,9 +355,12 @@ def battle(specific_enemy=None, specific_hp=None):
 
                 # 敵人附加效果
                 if "effects" in e_card:
-                    for effect in e_card["effects"]:
-                        new_effect = effect.copy()
-                        add_unique_effect(p_effects, new_effect, p_char)
+                    if e_name == '克洛克達爾' and has_water_luffy():
+                        print("💧 水魯夫狀態抵禦了克洛克達爾攻擊的附加效果！")
+                    else:
+                        for effect in e_card["effects"]:
+                            new_effect = effect.copy()
+                            add_unique_effect(p_effects, new_effect, p_char)
         else:
             print("\n💨 敵人被擊飛，無法反擊！")
 
