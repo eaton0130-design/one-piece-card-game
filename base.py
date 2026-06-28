@@ -3,6 +3,7 @@ import random
 import game_state
 from data_manager import load_json, save_player_data
 from upgrade import add_xp, get_level
+from audio import play_voice
 
 BUILDING_DATA = load_json("buildings.json", {
     "default_levels": {
@@ -74,6 +75,32 @@ CRAFTING_RECIPES = load_json("crafting_recipes.json", [
         "materials": {"metal": 15, "fragments": 2}
     }
 ])
+
+BUILDING_LABELS = {
+    "dock": "船塢",
+    "tavern": "酒館",
+    "workshop": "工坊",
+    "training": "訓練場",
+    "intelligence": "情報站",
+    "market": "市集",
+    "forge": "鍛造坊"
+}
+
+RESOURCE_LABELS = {
+    "money": "貝里",
+    "wood": "木材",
+    "food": "食物",
+    "metal": "金屬",
+    "intel": "情報",
+    "fragments": "碎片"
+}
+
+def label_building(name):
+    return BUILDING_LABELS.get(name, name)
+
+
+def label_resource(name):
+    return RESOURCE_LABELS.get(name, name)
 
 MISSION_TEMPLATES = [
     {
@@ -160,6 +187,8 @@ def init_base():
         base["auto_build_last_time"] = 0
     if "last_collect_time" not in base:
         base["last_collect_time"] = 0
+    if "last_hint_time" not in base:
+        base["last_hint_time"] = 0
     if "inventory" not in pd:
         pd["inventory"] = {"items": {}, "equipment": []}
     save_player_data()
@@ -300,7 +329,7 @@ def upgrade_building(name):
     spend_resources(cost)
     game_state.player_data["base"]["buildings"][name] += 1
     save_player_data()
-    print(f"✅ {name} 已升級到等級 {building_level(name)}！")
+    print(f"✅ {label_building(name)} 已升級到等級 {building_level(name)}！")
     return True
 
 
@@ -336,7 +365,7 @@ def collect_building_resources():
         base["resources"][key] = base["resources"].get(key, 0) + value
     base["last_collect_time"] = time.time()
     save_player_data()
-    items = ", ".join([f"{k} +{v}" for k, v in gain.items()])
+    items = ", ".join([f"{label_resource(k)} +{v}" for k, v in gain.items()])
     print(f"✅ 已收集基地資源：{items}")
     return True
 
@@ -408,20 +437,33 @@ def create_expedition(character_name, mission_index):
 
 
 def format_resources(resources):
-    return ", ".join([f"{k}:{v}" for k, v in resources.items()])
+    return ", ".join([f"{label_resource(k)}:{v}" for k, v in resources.items()])
+
+
+def reward_description(reward):
+    return ", ".join([f"{label_resource(k)} +{v}" for k, v in reward.items()])
+
+
+def format_recipe_materials(materials):
+    return ", ".join([f"{label_resource(k)}:{v}" for k, v in materials.items()])
 
 
 def show_base_status():
     base = get_base()
+    # 查看基地時播放翻書音效（非阻塞）
+    try:
+        play_voice("system/book_flip.mp3", block=False)
+    except Exception:
+        pass
     print("\n--- 海賊基地狀態 ---")
     print(f"資源：{format_resources(base['resources'])}")
     print(f"貝里：{game_state.player_data.get('money', 0)}")
     print("建築等級：")
     for name, level in base["buildings"].items():
         if name == "forge" and level == 0:
-            print(f"  {name}: 未建造")
+            print(f"  {label_building(name)}: 未建造")
         else:
-            print(f"  {name}: Lv{level}")
+            print(f"  {label_building(name)}: Lv{level}")
     print("進行中派遣：")
     if not base["expeditions"]:
         print("  無")
@@ -490,10 +532,6 @@ def has_forge():
     return building_level("forge") > 0
 
 
-def format_recipe_materials(materials):
-    return ", ".join([f"{k}:{v}" for k, v in materials.items()])
-
-
 def list_crafting_projects():
     return get_base()["crafting_projects"]
 
@@ -534,7 +572,7 @@ def choose_crafting_project():
 
 def start_crafting_project():
     if not has_forge():
-        print("❌ 你尚未建造工坊 Forge，無法開始製作裝備或道具。")
+        print("❌ 你尚未建造工坊，無法開始製作裝備或道具。")
         return
     recipes = get_crafting_recipes()
     print("\n--- 可製作配方 ---")
@@ -549,9 +587,10 @@ def start_crafting_project():
     resources = get_base()["resources"]
     for key, amount in recipe["materials"].items():
         if resources.get(key, 0) < amount:
-            print(f"❌ 材料不足：需要 {key} {amount}，目前只有 {resources.get(key, 0)}。")
+            print(f"❌ 材料不足：需要 {label_resource(key)} {amount}，目前只有 {resources.get(key, 0)}。")
             return
     for key, amount in recipe["materials"].items():
+
         resources[key] -= amount
     project = {
         "project_id": int(time.time() * 1000),
@@ -584,7 +623,7 @@ def create_crafting_assignment(character_name, project):
 
 def dispatch_crafting_menu():
     if not has_forge():
-        print("❌ 你尚未建造工坊 Forge，請先升級建築並建造工坊。")
+        print("❌ 你尚未建造工坊，請先升級建築並建造工坊。")
         return
     project = choose_crafting_project()
     if not project:
@@ -629,13 +668,18 @@ def complete_crafting_project(project):
 
 
 def show_upgrade_menu():
+    # 開啟升級建築時播放開門/敲門音效（非阻塞）
+    try:
+        play_voice("system/door_knock.mp3", block=False)
+    except Exception:
+        pass
     print("\n--- 升級建築 ---")
     buildings = get_base()["buildings"]
     for i, name in enumerate(buildings.keys()):
         level = buildings[name]
         cost = get_building_cost(name)
-        detail = ", ".join([f"{k}:{v}" for k, v in cost.items()])
-        print(f"{i}. {name} (Lv{level}) 升級成本: {detail}")
+        detail = ", ".join([f"{label_resource(k)}:{v}" for k, v in cost.items()])
+        print(f"{i}. {label_building(name)} (Lv{level}) 升級成本: {detail}")
     try:
         idx = int(input("輸入要升級的建築編號: "))
         name = list(buildings.keys())[idx]
@@ -649,6 +693,17 @@ def show_base_menu():
     init_base()
     while True:
         process_worker_building()
+        # 每隔 COLLECT_COOLDOWN 秒播放基地提示音（非阻塞）
+        base = get_base()
+        now = time.time()
+        last_hint = base.get("last_hint_time", 0)
+        if now - last_hint >= COLLECT_COOLDOWN:
+            base["last_hint_time"] = now
+            save_player_data()
+            try:
+                play_voice("system/base_hint.mp3", block=False)
+            except Exception:
+                pass
         print("\n===== 🏝️ 海賊基地 =====")
         print("1. 查看基地狀態")
         print("2. 收集建築資源")
