@@ -43,10 +43,10 @@ def init_data():
     game_state.FREE_GACHA_COOLDOWN = game_state.config.get("FREE_GACHA_COOLDOWN", 3600)
     game_state.NPC_ENEMY_BLACKLIST = game_state.config.get("NPC_ENEMY_BLACKLIST", ["西格"])
     
-    # 確保 story_index 存在
+    # 確保劇情進度欄位存在，避免不同模式互相衝突
     if "story_index" not in game_state.player_data:
         game_state.player_data["story_index"] = 0
-        save_player_data()
+    save_player_data()
     # 確保 characters 結構存在並為 my_chars 補上預設值
     init_characters()
     # 確保基地資料結構初始化
@@ -57,7 +57,7 @@ def main_menu():
         current_team = ', '.join(game_state.player_data['my_chars'])
         print(f"\n===== 🏴‍☠️ 航海王音效卡牌遊戲 ===== (💰 {game_state.player_data['money']} 貝里)")
         print(f"目前夥伴: {current_team}")
-        print("1. 觀看劇情模式")
+        print("1. 觀看航海王劇情模式")
         print("2. 進入自由戰鬥 (贏取貝里)")
         print("3. 角色抽卡 (每小時免費一次)")
         print("4. 海賊基地 (建築、派遣、資源)")
